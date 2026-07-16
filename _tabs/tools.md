@@ -8,4 +8,5 @@ order: 4
 
 | Tool | Description |
 |------|-------------|
-| [PIO Simulator](/tools/pio_sim/) | Browser-based RP2040/RP2350 PIO state machine simulator |
+| [PIO Simulator](/tools/pio_sim/)                | Browser-based RP2040/RP2350 PIO state machine simulator |
+| [MILSTD-1553-word-gen](/tools/mil_1553_msg_gen) | Browser-based MIL-STD-1553 CWD/SWD Word Generator       |

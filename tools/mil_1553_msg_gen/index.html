@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIL-STD-1553 Word Generator</title>
+    <style>
+        :root {
+            /* Command & Shared Colors */
+            --color-rt: #ff6b6b;      /* Coral Red */
+            --color-tr: #4db8ff;      /* Sky Blue */
+            --color-sub: #2ecc71;     /* Emerald Green */
+            --color-wc: #f1c40f;      /* Saffron Yellow */
+            --color-mode: #a855f7;    /* Purple — Mode Code */
+
+            /* Status Flag Colors */
+            --color-me: #e056fd;      /* Purple */
+            --color-inst: #ffbe76;    /* Soft Orange */
+            --color-sr: var(--color-sub);     /* Emerald green */
+            --color-bcr: #badc58;      /* Lime Green */
+            --color-busy: #1dd1a1;    /* Turquoise */
+            --color-sf: #48dbfb;      /* Cyan */
+            --color-dbca: var(--color-wc); /* Changed to Match Saffron Yellow */
+            --color-tf: #fda7df;      /* Light Lavender */
+
+            --color-reserved: #57606f; /* Muted Dark Gray */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #34495e;
+            padding-bottom: 10px;
+        }
+        .section {
+            background: #f9fbfd;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #2980b9;
+            font-size: 1.4rem;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: end;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100%;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            min-height: 34px;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        /* Command Group Colors */
+        .group-rt label { color: var(--color-rt); }
+        .group-rt input { border: 2px solid var(--color-rt); background: #fffcfc; }
+        .group-tr label { color: var(--color-tr); }
+        .group-tr select { border: 2px solid var(--color-tr); background: #fcfeff; }
+        .group-sub label { color: var(--color-sub); }
+        .group-sub input { border: 2px solid var(--color-sub); background: #fcfdfc; }
+        .group-wc label { color: var(--color-wc); }
+        .group-wc input { border: 2px solid var(--color-wc); background: #fffdf9; }
+        .group-mode label { color: var(--color-mode); }
+        .group-mode input { border: 2px solid var(--color-mode); background: #fcfaff; }
+
+        input[type="number"], select {
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        /* Status Checkbox Styling & Coloring */
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .checkbox-label:hover {
+            background: #f1f5f9;
+        }
+        .checkbox-label input {
+            margin-right: 8px;
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+
+        /* Unique checkbox label text colors */
+        .lbl-me { color: var(--color-me); }
+        .lbl-inst { color: var(--color-inst); }
+        .lbl-sr { color: var(--color-sr); }
+        .lbl-bcr { color: var(--color-bcr); }
+        .lbl-busy { color: var(--color-busy); }
+        .lbl-sf { color: var(--color-sf); }
+        .lbl-dbca { color: var(--color-dbca); }
+        .lbl-tf { color: var(--color-tf); }
+
+        .result-box {
+            background: #2d3748;
+            color: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            margin-top: 15px;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .result-row:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Dynamic color classes for outputs */
+        .bin-display {
+            letter-spacing: 3px;
+            font-weight: bold;
+        }
+        .bit-rt { color: var(--color-rt); }
+        .bit-tr { color: var(--color-tr); }
+        .bit-sub { color: var(--color-sub); }
+        .bit-wc { color: var(--color-wc); }
+        .bit-mode { color: var(--color-mode); }
+
+        .bit-me { color: var(--color-me); }
+        .bit-inst { color: var(--color-inst); }
+        .bit-sr { color: var(--color-sr); }
+        .bit-bcr { color: var(--color-bcr); }
+        .bit-busy { color: var(--color-busy); }
+        .bit-sf { color: var(--color-sf); }
+        .bit-dbca { color: var(--color-dbca); }
+        .bit-tf { color: var(--color-tf); }
+        .bit-res { color: var(--color-reserved); }
+
+        .hex-display {
+            color: #a7f3d0;
+            font-weight: bold;
+        }
+        .parity-display {
+            color: #fbbf24;
+            font-weight: bold;
+        }
+        .parity-box {
+            background: #374151;
+            color: #fbbf24;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>MIL-STD-1553 Word Generator (16-bit Core)</h1>
+
+    <div class="section">
+        <h2>Command Word Configuration</h2>
+        <div class="form-grid">
+            <div class="form-group group-rt">
+                <label for="cmd-rt-addr">RT Address (5 bits: 0-31)</label>
+                <input type="number" id="cmd-rt-addr" min="0" max="31" value="2" oninput="generateWords()">
+            </div>
+            <div class="form-group group-tr">
+                <label for="cmd-tr">Tx / Rx Mode (1 bit)</label>
+                <select id="cmd-tr" onchange="generateWords()">
+                    <option value="0" selected>0 - RT Receive</option>
+                    <option value="1">1 - RT Transmit</option>
+                </select>
+            </div>
+            <div class="form-group group-sub">
+                <label for="cmd-subaddr">Subaddress/Mode (5 bits: 0-31)</label>
+                <input type="number" id="cmd-subaddr" min="0" max="31" value="0" oninput="generateWords()">
+            </div>
+            <div class="form-group group-wc">
+                <label for="cmd-wc" id="label-wc-mode">Mode Code (5 bits: 0-31)</label>
+                <input type="number" id="cmd-wc" min="0" max="31" value="1" oninput="generateWords()">
+            </div>
+        </div>
+
+        <div class="result-box">
+            <div class="result-row">
+                <span>Binary (Bits 3-18):</span>
+                <span id="cmd-bin" class="bin-display"></span>
+            </div>
+            <div class="result-row">
+                <span>Hexadecimal representation:</span>
+                <span id="cmd-hex" class="hex-display">0x0000</span>
+            </div>
+            <div class="result-row">
+                <span>Parity:</span>
+                <span id="cmd-parity-bit" class="parity-display">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Status Word Configuration</h2>
+        <div class="form-grid">
+            <div class="form-group group-rt" style="grid-column: span 2;">
+                <label for="status-rt-addr">RT Address (5 bits: 0-31)</label>
+                <input type="number" id="status-rt-addr" min="0" max="31" value="2" oninput="generateWords()">
+            </div>
+        </div>
+
+        <label style="min-height: auto; display: block; margin-bottom: 10px; font-weight:600;">Status Flags (1 bit each):</label>
+        <div class="checkbox-group">
+            <label class="checkbox-label lbl-me"><input type="checkbox" id="st-me" onchange="generateWords()"> Message Error</label>
+            <label class="checkbox-label lbl-inst"><input type="checkbox" id="st-inst" onchange="generateWords()"> Instrumentation</label>
+            <label class="checkbox-label lbl-sr"><input type="checkbox" id="st-sr" onchange="generateWords()"> Service Request</label>
+            <label class="checkbox-label lbl-bcr"><input type="checkbox" id="st-bcr" onchange="generateWords()"> Broadcast Cmd Recd</label>
+            <label class="checkbox-label lbl-busy"><input type="checkbox" id="st-busy" onchange="generateWords()"> Busy</label>
+            <label class="checkbox-label lbl-sf"><input type="checkbox" id="st-sf" onchange="generateWords()"> Subsystem Flag</label>
+            <label class="checkbox-label lbl-dbca"><input type="checkbox" id="st-dbca" onchange="generateWords()"> Dynamic Bus Ctrl Acc.</label>
+            <label class="checkbox-label lbl-tf"><input type="checkbox" id="st-tf" onchange="generateWords()"> Terminal Flag</label>
+        </div>
+
+        <div class="result-box">
+            <div class="result-row">
+                <span>Binary (Bits 3-18):</span>
+                <span id="status-bin" class="bin-display"></span>
+            </div>
+            <div class="result-row">
+                <span>Hexadecimal representation:</span>
+                <span id="status-hex" class="hex-display">0x0000</span>
+            </div>
+            <div class="result-row">
+                <span>Parity:</span>
+                <span id="status-parity-bit" class="parity-display">0</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function parseVal(id, max) {
+        let val = parseInt(document.getElementById(id).value) || 0;
+        if (val < 0) val = 0;
+        if (val > max) val = max;
+        document.getElementById(id).value = val;
+        return val;
+    }
+
+    function getBoolVal(id) {
+        return document.getElementById(id).checked ? 1 : 0;
+    }
+
+    function toBinStr(value, bits) {
+        return value.toString(2).padStart(bits, '0');
+    }
+
+    function calcParity(value) {
+        // MIL-STD-1553 uses odd parity over the 16-bit word
+        let ones = 0;
+        for (let i = 0; i < 16; i++) {
+            if (value & (1 << i)) ones++;
+        }
+        return (ones % 2 === 0) ? 1 : 0;  // 1 if even ones → make odd; 0 if already odd
+    }
+
+    function generateWords() {
+        // --- Command Word Calculation ---
+        const cmdRt = parseVal('cmd-rt-addr', 31);
+        const cmdTr = parseInt(document.getElementById('cmd-tr').value);
+        const cmdSub = parseVal('cmd-subaddr', 31);
+        const cmdWc = parseVal('cmd-wc', 31);
+
+        // Protocol Check: Dynamically alter UI label based on subaddress value
+        const targetLabel = document.getElementById('label-wc-mode');
+        const wcGroup = document.getElementById('cmd-wc').closest('.form-group');
+        if (cmdSub === 0 || cmdSub === 31) {
+            targetLabel.innerText = "Mode Code (5 bits: 0-31)";
+            wcGroup.classList.remove('group-wc');
+            wcGroup.classList.add('group-mode');
+        } else {
+            targetLabel.innerText = "Word Count (5 bits: 1-32)";
+            wcGroup.classList.remove('group-mode');
+            wcGroup.classList.add('group-wc');
+        }
+
+        let cmdWord = (cmdRt << 11) | (cmdTr << 10) | (cmdSub << 5) | cmdWc;
+
+        const wcClass = (cmdSub === 0 || cmdSub === 31) ? 'bit-mode' : 'bit-wc';
+        document.getElementById('cmd-bin').innerHTML =
+            `<span class="bit-rt">${toBinStr(cmdRt, 5)}</span> ` +
+            `<span class="bit-tr">${cmdTr}</span> ` +
+            `<span class="bit-sub">${toBinStr(cmdSub, 5)}</span> ` +
+            `<span class="${wcClass}">${toBinStr(cmdWc, 5)}</span>`;
+
+        document.getElementById('cmd-hex').innerText = "0x" + cmdWord.toString(16).toUpperCase().padStart(4, '0');
+        document.getElementById('cmd-parity-bit').innerText = calcParity(cmdWord);
+
+        // --- Status Word Calculation ---
+        const statRt = parseVal('status-rt-addr', 31);
+        const me = getBoolVal('st-me');
+        const inst = getBoolVal('st-inst');
+        const sr = getBoolVal('st-sr');
+        const bcr = getBoolVal('st-bcr');
+        const busy = getBoolVal('st-busy');
+        const sf = getBoolVal('st-sf');
+        const dbca = getBoolVal('st-dbca');
+        const tf = getBoolVal('st-tf');
+
+        let statusWord = (statRt << 11) | (me << 10) | (inst << 9) | (sr << 8) |
+                         (0 << 5) | (bcr << 4) | (busy << 3) | (sf << 2) |
+                         (dbca << 1) | (tf << 0);
+
+        document.getElementById('status-bin').innerHTML =
+            `<span class="bit-rt">${toBinStr(statRt, 5)}</span> ` +
+            `<span class="bit-me">${me}</span> ` +
+            `<span class="bit-inst">${inst}</span> ` +
+            `<span class="bit-sr">${sr}</span> ` +
+            `<span class="bit-res">000</span> ` +
+            `<span class="bit-bcr">${bcr}</span> ` +
+            `<span class="bit-busy">${busy}</span> ` +
+            `<span class="bit-sf">${sf}</span> ` +
+            `<span class="bit-dbca">${dbca}</span> ` +
+            `<span class="bit-tf">${tf}</span>`;
+
+        document.getElementById('status-hex').innerText = "0x" + statusWord.toString(16).toUpperCase().padStart(4, '0');
+        document.getElementById('status-parity-bit').innerText = calcParity(statusWord);
+    }
+
+    window.onload = generateWords;
+</script>
+
+</body>
+</html>

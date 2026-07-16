@@ -28,9 +28,6 @@ const txFifoList = document.getElementById('tx-fifo-list');
 const rxFifoList = document.getElementById('rx-fifo-list');
 const btnPopRx = document.getElementById('btn-pop-rx');
 const rxPopResult = document.getElementById('rx-pop-result');
-const btnUpdateRegs = document.getElementById('btn-update-regs');
-const btnUpdateRegX = document.getElementById('btn-update-reg-x');
-const btnUpdateRegY = document.getElementById('btn-update-reg-y');
 const updateRegsResult = document.getElementById('update-regs-result');
 
 const cfgInitX = document.getElementById('cfg-init-x');
@@ -178,20 +175,7 @@ btnEngageSyncAll.addEventListener('click', () => {
     updateUI();
 });
 
-btnUpdateRegs.addEventListener('click', () => {
-    const xv = parseUserNumber(cfgInitX.value);
-    const yv = parseUserNumber(cfgInitY.value);
-    if (isNaN(xv) && isNaN(yv)) {
-        updateRegsResult.textContent = 'Invalid values';
-        return;
-    }
-    if (!isNaN(xv)) emulator.x = xv >>> 0;
-    if (!isNaN(yv)) emulator.y = yv >>> 0;
-    updateRegsResult.textContent = 'Updated';
-    updateUI();
-});
-
-btnUpdateRegX.addEventListener('click', () => {
+document.getElementById('btn-update-reg-x').addEventListener('click', () => {
     const xv = parseUserNumber(cfgInitX.value);
     if (isNaN(xv)) { updateRegsResult.textContent = 'Invalid X value'; return; }
     emulator.x = xv >>> 0;
@@ -199,7 +183,7 @@ btnUpdateRegX.addEventListener('click', () => {
     updateUI();
 });
 
-btnUpdateRegY.addEventListener('click', () => {
+document.getElementById('btn-update-reg-y').addEventListener('click', () => {
     const yv = parseUserNumber(cfgInitY.value);
     if (isNaN(yv)) { updateRegsResult.textContent = 'Invalid Y value'; return; }
     emulator.y = yv >>> 0;

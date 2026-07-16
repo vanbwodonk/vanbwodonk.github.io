@@ -163,6 +163,9 @@ paginate: 10
 # The base URL of your site
 baseurl: ""
 
+# Allow posts dated in the future (default: false)
+future: true
+
 # ------------ The following options are not recommended to be modified ------------------
 
 kramdown:

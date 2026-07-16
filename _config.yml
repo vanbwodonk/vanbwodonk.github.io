@@ -16,7 +16,7 @@ timezone: Asia/Jakarta
 
 title: Arif Darmawan # the main title
 
-tagline: A text-focused Jekyll theme # it will display as the subtitle
+tagline: Embedded Systems Engineer # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
   My personal blog using github pages.

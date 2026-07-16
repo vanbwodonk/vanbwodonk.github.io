@@ -19,3 +19,4 @@ Writing in Markdown is incredibly easy because:
 Here is a quick code snippet example:
 ```javascript
 console.log("Hello, World!");
+```

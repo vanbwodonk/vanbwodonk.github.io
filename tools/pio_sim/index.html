@@ -386,19 +386,21 @@
                     </div>
                 </div>
 
-                <h3>Register Init Values</h3>
+                <h3>Register Update</h3>
                 <div class="control-panel pin-config">
                     <div class="config-item">
-                        <label>X Init:</label>
+                        <label>Update X:</label>
                         <input type="text" id="cfg-init-x" value="0x00000000" style="width:110px" title="Initial X value (0x hex or decimal)">
+                        <button id="btn-update-reg-x">Set X</button>
                     </div>
                     <div class="config-item">
-                        <label>Y Init:</label>
+                        <label>Update Y:</label>
                         <input type="text" id="cfg-init-y" value="0x00000000" style="width:110px" title="Initial Y value (0x hex or decimal)">
+                        <button id="btn-update-reg-y">Set Y</button>
                     </div>
                     <div style="width:100%"></div>
                     <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
-                        <button id="btn-update-regs">Update</button>
+                        <button id="btn-update-regs">Both</button>
                         <span id="update-regs-result" style="font-size:0.9em;color:#555;"></span>
                     </div>
                 </div>
